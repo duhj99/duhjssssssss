@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>批量处理工具箱</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <div class="logo">
+                <i class="fas fa-toolbox"></i>
+                <h1>批量处理工具箱</h1>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="#" class="active">首页</a></li>
+                    <li><a href="#">使用说明</a></li>
+                    <li><a href="#">关于</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <main class="app-main">
+            <section class="tools-section">
+                <h2>功能选择</h2>
+                <div class="tools-grid">
+                    <!-- Word处理卡片 -->
+                    <div class="tool-card" data-tool="word">
+                        <div class="card-inner">
+                            <div class="card-front">
+                                <div class="card-icon">
+                                    <i class="far fa-file-word"></i>
+                                </div>
+                                <h3>Word文档处理</h3>
+                            </div>
+                            <div class="card-back">
+                                <ul class="feature-list">
+                                    <li>批量查找替换</li>
+                                    <li>文档合并</li>
+                                    <li>内容提取</li>
+                                </ul>
+                                <button class="btn-select">选择</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Excel处理卡片 -->
+                    <div class="tool-card" data-tool="excel">
+                        <div class="card-inner">
+                            <div class="card-front">
+                                <div class="card-icon">
+                                    <i class="far fa-file-excel"></i>
+                                </div>
+                                <h3>Excel文档处理</h3>
+                            </div>
+                            <div class="card-back">
+                                <ul class="feature-list">
+                                    <li>内容批量替换</li>
+                                    <li>数据合并</li>
+                                </ul>
+                                <button class="btn-select">选择</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 文件重命名卡片 -->
+                    <div class="tool-card" data-tool="rename">
+                        <div class="card-inner">
+                            <div class="card-front">
+                                <div class="card-icon">
+                                    <i class="fas fa-file-signature"></i>
+                                </div>
+                                <h3>文件重命名</h3>
+                            </div>
+                            <div class="card-back">
+                                <ul class="feature-list">
+                                    <li>批量重命名</li>
+                                    <li>序列化重命名</li>
+                                    <li>从Excel导入规则</li>
+                                </ul>
+                                <button class="btn-select">选择</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 图片处理卡片 -->
+                    <div class="tool-card" data-tool="image">
+                        <div class="card-inner">
+                            <div class="card-front">
+                                <div class="card-icon">
+                                    <i class="far fa-images"></i>
+                                </div>
+                                <h3>图片批量处理</h3>
+                            </div>
+                            <div class="card-back">
+                                <ul class="feature-list">
+                                    <li>调整大小</li>
+                                    <li>旋转</li>
+                                    <li>添加水印</li>
+                                    <li>压缩</li>
+                                </ul>
+                                <button class="btn-select">选择</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 功能区域 - 默认隐藏 -->
+            <section class="function-area" id="functionArea">
+                <!-- 这里的内容会根据选择的工具动态加载 -->
+            </section>
+        </main>
+
+        <footer class="app-footer">
+            <p>&copy; 2023 批量处理工具箱 | 支持Chrome、Firefox、Edge、Safari</p>
+        </footer>
+    </div>
+
+    <!-- 工具功能模板 - 这些会被JavaScript动态加载 -->
+    <template id="word-template">
+        <div class="function-panel">
+            <h2>Word文档处理</h2>
+            <div class="function-tabs">
+                <button class="tab-btn active" data-tab="word-replace">批量查找替换</button>
+                <button class="tab-btn" data-tab="word-merge">文档合并</button>
+                <button class="tab-btn" data-tab="word-extract">内容提取</button>
+            </div>
+            
+            <div class="tab-content active" id="word-replace">
+                <div class="upload-area">
+                    <label for="word-files">选择Word文件</label>
+                    <input type="file" id="word-files" multiple accept=".docx,.doc">
+                    <div class="file-list" id="word-file-list">
+                        <p>未选择文件</p>
+                    </div>
+                </div>
+                
+                <div class="operation-panel">
+                    <div class="form-group">
+                        <label for="search-text">查找内容:</label>
+                        <input type="text" id="search-text">
+                    </div>
+                    <div class="form-group">
+                        <label for="replace-text">替换为:</label>
+                        <input type="text" id="replace-text">
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="use-regex">
+                            使用正则表达式
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <button class="btn-preview">预览替换结果</button>
+                        <button class="btn-process">开始处理</button>
+                    </div>
+                </div>
+                
+                <div class="preview-area">
+                    <h3>预览结果</h3>
+                    <div class="preview-content">
+                        <p>请先上传文件并设置查找替换内容</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 其他Word功能的内容会在选择时动态加载 -->
+        </div>
+    </template>
+
+    <template id="excel-template">
+        <div class="function-panel">
+            <h2>Excel文档处理</h2>
+            <div class="function-tabs">
+                <button class="tab-btn active" data-tab="excel-replace">内容批量替换</button>
+                <button class="tab-btn" data-tab="excel-merge">数据合并</button>
+            </div>
+            
+            <div class="tab-content active" id="excel-replace">
+                <div class="upload-area">
+                    <label for="excel-files">选择Excel文件</label>
+                    <input type="file" id="excel-files" multiple accept=".xlsx,.xls">
+                    <div class="file-list" id="excel-file-list">
+                        <p>未选择文件</p>
+                    </div>
+                </div>
+                
+                <div class="operation-panel">
+                    <div class="form-group">
+                        <label for="excel-search-text">查找内容:</label>
+                        <input type="text" id="excel-search-text">
+                    </div>
+                    <div class="form-group">
+                        <label for="excel-replace-text">替换为:</label>
+                        <input type="text" id="excel-replace-text">
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="excel-use-regex">
+                            使用正则表达式
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>工作表范围:</label>
+                        <select id="sheet-range">
+                            <option value="all">所有工作表</option>
+                            <option value="active">仅活动工作表</option>
+                            <option value="selected">指定工作表</option>
+                        </select>
+                        <input type="text" id="sheet-names" placeholder="工作表名称，用逗号分隔" style="display: none;">
+                    </div>
+                    <div class="form-group">
+                        <button class="btn-preview">预览替换结果</button>
+                        <button class="btn-process">开始处理</button>
+                    </div>
+                </div>
+                
+                <div class="preview-area">
+                    <h3>预览结果</h3>
+                    <div class="preview-content">
+                        <p>请先上传文件并设置查找替换内容</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="excel-merge">
+                <div class="upload-area">
+                    <label for="excel-merge-files">选择Excel文件</label>
+                    <input type="file" id="excel-merge-files" multiple accept=".xlsx,.xls">
+                    <div class="file-list" id="excel-merge-file-list">
+                        <p>未选择文件</p>
+                    </div>
+                </div>
+                
+                <div class="operation-panel"></div>
+                    <div class="form-group">
+                        <label>合并方式:</label>
+                        <div class="radio-group">
+                            <label>
+                                <input type="radio" name="merge-type" value="row" checked>
+                                按行合并（追加数据）
+                            </label>
+                            <label>
+                                <input type="radio" name="merge-type" value="column">
+                                按列合并（并排数据）
+                            </label>
+                            <label>
+                                <input type="radio" name="merge-type" value="sheet">
+                                按工作表合并（保留所有工作表）
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="remove-duplicates">
+                            合并时去除重复数据
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label for="output-filename">输出文件名:</label>
+                        <input type="text" id="output-filename" value="合并结果.xlsx">
+                    </div>
+                    <div class="form-group">
+                        <button class="btn-process">开始合并</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="rename-template">
+        <div class="function-panel">
+            <h2>文件重命名</h2>
+            <div class="function-tabs">
+                <button class="tab-btn active" data-tab="batch-rename">批量重命名</button>
+                <button class="tab-btn" data-tab="sequence-rename">序列化重命名</button>
+                <button class="tab-btn" data-tab="excel-rename">从Excel导入规则</button>
+            </div>
+            
+            <div class="tab-content active" id="batch-rename">
+                <div class="upload-area">
+                    <label for="rename-files">选择文件</label>
+                    <input type="file" id="rename-files" multiple>
+                    <div class="file-list" id="rename-file-list">
+                        <p>未选择文件</p>
+                    </div>
+                </div>
+                
+                <div class="operation-panel">
+                    <div class="form-group">
+                        <label>重命名操作:</label>
+                        <select id="rename-operation">
+                            <option value="add-prefix">添加前缀</option>
+                            <option value="add-suffix">添加后缀</option>
+                            <option value="replace">替换内容</option>
+                            <option value="remove">删除内容</option>
+                            <option value="regex">使用正则表达式</option>
+                        </select>
+                    </div>
+                    
+                    <!-- 添加前缀选项 -->
+                    <div class="rename-option" id="add-prefix-option">
+                        <div class="form-group">
+                            <label for="prefix-text">前缀文本:</label>
+                            <input type="text" id="prefix-text">
+                        </div>
+                    </div>
+                    
+                    <!-- 添加后缀选项 -->
+                    <div class="rename-option" id="add-suffix-option" style="display: none;">
+                        <div class="form-group">
+                            <label for="suffix-text">后缀文本:</label>
+                            <input type="text" id="suffix-text">
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="before-extension">
+                                在扩展名之前添加
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- 替换内容选项 -->
+                    <div class="rename-option" id="replace-option" style="display: none;">
+                        <div class="form-group">
+                            <label for="replace-from">查找内容:</label>
+                            <input type="text" id="replace-from">
+                        </div>
+                        <div class="form-group">
+                            <label for="replace-to">替换为:</label>
+                            <input type="text" id="replace-to">
+                        </div>
+                    </div>
+                    
+                    <!-- 删除内容选项 -->
+                    <div class="rename-option" id="remove-option" style="display: none;">
+                        <div class="form-group">
+                            <label for="remove-text">要删除的内容:</label>
+                            <input type="text" id="remove-text">
+                        </div>
+                    </div>
+                    
+                    <!-- 正则表达式选项 -->
+                    <div class="rename-option" id="regex-option" style="display: none;">
+                        <div class="form-group">
+                            <label for="regex-pattern">正则表达式模式:</label>
+                            <input type="text" id="regex-pattern">
+                        </div>
+                        <div class="form-group">
+                            <label for="regex-replacement">替换为:</label>
+                            <input type="text" id="regex-replacement">
+                            <p class="help-text">可使用$1, $2等引用捕获组</p>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <button class="btn-preview">预览结果</button>
+                        <button class="btn-process">开始重命名</button>
+                    </div>
+                </div>
+                
+                <div class="preview-area">
+                    <h3>预览结果</h3>
+                    <div class="preview-content">
+                        <p>请先上传文件并设置重命名规则</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="sequence-rename">
+                <div class="upload-area">
+                    <label for="sequence-files">选择文件</label>
+                    <input type="file" id="sequence-files" multiple>
+                    <div class="file-list" id="sequence-file-list">
+                        <p>未选择文件</p>
+                    </div>
+                </div>
+                
+                <div class="operation-panel">
+                    <div class="form-group">
+                        <label>序列化方式:</label>
+                        <select id="sequence-type">
+                            <option value="number">数字序列</option>
+                            <option value="date">日期时间</option>
+                            <option value="custom">自定义格式</option>
+                        </select>
+                    </div>
+                    
+                    <!-- 数字序列选项 -->
+                    <div class="sequence-option" id="number-option">
+                        <div class="form-group">
+                            <label for="number-format">命名格式:</label>
+                            <input type="text" id="number-format" value="文件{n}">
+                            <p class="help-text">{n}将被替换为序列号</p>
+                        </div>
+                        <div class="form-group">
+                            <label for="start-number">起始数字:</label>
+                            <input type="number" id="start-number" value="1">
+                        </div>
+                        <div class="form-group">
+                            <label for="number-step">步长:</label>
+                            <input type="number" id="number-step" value="1">
+                        </div>
+                        <div class="form-group">
+                            <label for="number-digits">数字位数:</label>
+                            <input type="number" id="number-digits" value="2" min="1" max="10">
+                            <p class="help-text">例如：位数为2时，1显示为01</p>
+                        </div>
+                    </div>
+                    
+                    <!-- 日期时间选项 -->
+                    <div class="sequence-option" id="date-option" style="display: none;">
+                        <div class="form-group">
+                            <label for="date-format">命名格式:</label>
+                            <input type="text" id="date-format" value="文件{date}">
+                            <p class="help-text">{date}将被替换为日期时间</p>
+                        </div>
+                        <div class="form-group">
+                            <label for="date-pattern">日期格式:</label>
+                            <select id="date-pattern">
+                                <option value="yyyy-MM-dd">yyyy-MM-dd</option>
+                                <option value="yyyyMMdd">yyyyMMdd</option>
+                                <option value="yyyy-MM-dd_HH-mm">yyyy-MM-dd_HH-mm</option>
+                                <option value="yyyyMMdd_HHmm">yyyyMMdd_HHmm</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- 自定义格式选项 -->
+                    <div class="sequence-option" id="custom-option" style="display: none;">
+                        <div class="form-group">
+                            <label for="custom-format">自定义格式:</label>
+                            <input type="text" id="custom-format" value="{name}_{n}">
+                            <p class="help-text">
+                                可用变量：<br>
+                                {name} - 原文件名<br>
+                                {n} - 序列号<br>
+                                {ext} - 文件扩展名
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="keep-extension">
+                            保留原文件扩展名
+                        </label>
+                    </div>
+                    
+                    <div class="form-group">
+                        <button class="btn-preview">预览结果</button>
+                        <button class="btn-process">开始重命名</button>
+                    </div>
+                </div>
+                
+                <div class="preview-area">
+                    <h3>预览结果</h3>
+                    <div class="preview-content">
+                        <p>请先上传文件并设置序列化规则</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="excel-rename">
+                <div class="upload-area">
+                    <div class="excel-upload">
+                        <label for="rename-excel">选择Excel文件</label>
+                        <input type="file" id="rename-excel" accept=".xlsx,.xls">
+                        <p id="excel-filename">未选择文件</p>
+                    </div>
+                    <div class="files-upload">
+                        <label for="excel-rename-files">选择要重命名的文件</label>
+                        <input type="file" id="excel-rename-files" multiple>
+                        <div class="file-list" id="excel-rename-file-list">
+                            <p>未选择文件</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="operation-panel">
+                    <div class="form-group">
+                        <label for="old-name-column">原文件名列:</label>
+                        <input type="text" id="old-name-column" value="A">
+                    </div>
+                    <div class="form-group">
+                        <label for="new-name-column">新文件名列:</label>
+                        <input type="text" id="new-name-column" value="B">
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="excel-keep-extension">
+                            保留原文件扩展名
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <button class="btn-preview">预览结果</button>
+                        <button class="btn-process">开始重命名</button>
+                    </div>
+                </div>
+                
+                <div class="preview-area">
+                    <h3>预览结果</h3>
+                    <div class="preview-content">
+                        <p>请先上传Excel文件和要重命名的文件</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="image-template">
+        <div class="function-panel">
+            <h2>图片批量处理</h2>
+            
+            <div class="upload-area">
+                <label for="image-files">选择图片文件</label>
+                <input type="file" id="image-files" multiple accept=".jpg,.jpeg,.png">
+                <div class="file-list" id="image-file-list">
+                    <p>未选择文件</p>
+                </div>
+            </div>
+            
+            <div class="operation-panel">
+                <div class="form-group">
+                    <label>调整大小:</label>
+                    <div class="size-inputs">
+                        <input type="number" id="width" placeholder="宽度">
+                        <span>×</span>
+                        <input type="number" id="height" placeholder="高度">
+                        <label>
+                            <input type="checkbox" id="maintain-ratio">
+                            保持比例
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>旋转:</label>
+                    <div class="rotation-controls">
+                        <button class="btn-rotate" data-degrees="-90">↺ 90°</button>
+                        <button class="btn-rotate" data-degrees="90">↻ 90°</button>
+                        <button class="btn-rotate" data-degrees="180">↻ 180°</button>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>水印:</label>
+                    <div class="watermark-controls">
+                        <input type="text" id="watermark-text" placeholder="水印文字">
+                        <input type="color" id="watermark-color" value="#ffffff">
+                        <label>透明度:</label>
+                        <input type="range" id="watermark-opacity" min="0" max="1" step="0.1" value="0.5">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>压缩质量:</label>
+                    <input type="range" id="compression-quality" min="0" max="100" value="80">
+                    <span id="quality-value">80%</span>
+                </div>
+                
+                <div class="form-group">
+                    <button class="btn-preview">预览效果</button>
+                    <button class="btn-process">开始处理</button>
+                </div>
+            </div>
+            
+            <div class="preview-area">
+                <h3>预览</h3>
+                <div class="preview-grid" id="image-preview">
+                    <p>请先上传图片并设置处理参数</p>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <script src="js/word.js"></script>
+    <script src="js/excel.js"></script>
+    <script src="js/rename.js"></script>
+    <script src="js/image.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
