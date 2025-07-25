@@ -6,6 +6,7 @@ from typing import List, Dict, Any, Optional
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 import uvicorn
 
@@ -24,6 +25,10 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# 挂载静态文件目录
+# 由于应用程序是从backend目录启动的，使用相对路径"../"指向项目根目录
+app.mount("/", StaticFiles(directory="../", html=True), name="static")
 
 # 创建临时文件夹
 TEMP_DIR = os.path.join(tempfile.gettempdir(), "batch-toolbox")
@@ -86,7 +91,7 @@ def create_output_path(original_filename: str, suffix: str = "") -> str:
     return os.path.join(OUTPUT_DIR, f"{file_id}_{output_filename}")
 
 # API路由
-@app.get("/")
+@app.get("/api/status")
 def read_root():
     return {"message": "批量工具箱API服务正在运行"}
 
